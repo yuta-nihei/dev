@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI IDE 比較 — Cursor / Antigravity / Windsurf / Codex | Dev Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c28;
+      --accent: #00e5ff;
+      --accent2: #ff6b35;
+      --accent3: #a259ff;
+      --text: #e8e8f0;
+      --text-dim: #7878a0;
+      --border: rgba(255,255,255,0.07);
+      --glow: 0 0 30px rgba(0,229,255,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    .lang-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .hidden { display: none !important; }
+
+    .header-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 4px 12px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    h1 span.accent { color: var(--accent); }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    section.tool-section {
+      margin-bottom: 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .tool-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .tool-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .pros-cons {
+      display: grid;
+      gap: 20px;
+    }
+
+    @media (min-width: 600px) {
+      .pros-cons { grid-template-columns: 1fr 1fr; }
+    }
+
+    .pros, .cons {
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .pros {
+      background: rgba(0,229,255,0.06);
+      border: 1px solid rgba(0,229,255,0.2);
+    }
+
+    .cons {
+      background: rgba(255,107,53,0.06);
+      border: 1px solid rgba(255,107,53,0.2);
+    }
+
+    .pros-title, .cons-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .pros-title { color: var(--accent); }
+    .cons-title { color: var(--accent2); }
+
+    .pros ul, .cons ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .pros li, .cons li {
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 6px;
+      padding-left: 1em;
+      position: relative;
+    }
+
+    .pros li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .cons li::before {
+      content: '×';
+      position: absolute;
+      left: 0;
+      color: var(--accent2);
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover { text-decoration: underline; }
+
+    .intro-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .intro-box h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    .intro-box p, .intro-box li {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .intro-box ul {
+      margin: 12px 0 0 1.2em;
+      padding-left: 0;
+    }
+
+    .intro-box li { margin-bottom: 6px; }
+
+    .intro-box .term {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 16px;
+    }
+
+    .intro-box .term dt { margin-top: 8px; }
+    .intro-box .term dd { margin-left: 1em; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ja')" id="btn-ja">JA</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+      <div class="header-badge">AI IDE COMPARISON</div>
+      <h1><span class="ja-text">Cursor / Antigravity / Windsurf / Codex</span><span class="en-text hidden">Cursor / Antigravity / Windsurf / Codex</span><br><span class="ja-text accent">メリット・デメリット</span><span class="en-text hidden accent">Pros & Cons</span></h1>
+      <p class="subtitle ja-text">AI 統合開発環境・コーディングツールの比較一覧</p>
+      <p class="subtitle en-text hidden">Comparison of AI-powered IDEs and coding tools</p>
+    </header>
+
+    <section class="intro-box">
+      <h2><span class="ja-text">初心者向け：このページでわかること</span><span class="en-text hidden">For beginners: What this page explains</span></h2>
+      <p class="ja-text"><strong>IDE</strong> とは、コードを書くための「編集ソフト」です。ここで紹介する <strong>AI IDE</strong> は、その中に AI が入っていて、「ここを直して」「この機能を追加して」と日本語や英語で頼むと、AI がコードを書いたり直したりしてくれます。</p>
+      <p class="en-text hidden">An <strong>IDE</strong> is the app you use to write code. The <strong>AI IDEs</strong> listed here have AI built in: you ask in plain language (e.g. “fix this” or “add this feature”) and the AI writes or edits code for you.</p>
+      <p class="ja-text">プログラミングを始めたばかりの人でも、「どのツールが自分に向いているか」の目安がわかるように、それぞれの<strong>メリット（良いところ）</strong>と<strong>デメリット（気をつけるところ）</strong>をまとめました。</p>
+      <p class="en-text hidden">We’ve summarized <strong>pros</strong> and <strong>cons</strong> for each tool so even beginners can get a sense of which one might suit them.</p>
+      <p class="ja-text" style="margin-top:16px"><strong>どれを選べばいい？</strong></p>
+      <p class="en-text hidden" style="margin-top:16px"><strong>Which one should I choose?</strong></p>
+      <ul class="ja-text">
+        <li><strong>まず無料で試したい</strong> → Antigravity（プレビュー無料）や各ツールの無料プラン</li>
+        <li><strong>すでに VS Code を使っている</strong> → Cursor はそのままの操作感で使える</li>
+        <li><strong>日本語で指示したい・操作を簡単に</strong> → Windsurf がとっつきやすい</li>
+        <li><strong>ChatGPT の有料会員</strong> → Codex が追加料金なしで使える</li>
+      </ul>
+      <ul class="en-text hidden">
+        <li><strong>Try for free first</strong> → Antigravity (free preview) or each tool’s free tier</li>
+        <li><strong>Already use VS Code</strong> → Cursor feels familiar</li>
+        <li><strong>Prefer Japanese / simpler UI</strong> → Windsurf is beginner-friendly</li>
+        <li><strong>ChatGPT paid subscriber</strong> → Codex is included at no extra cost</li>
+      </ul>
+      <dl class="term ja-text">
+        <dt>用語メモ</dt>
+        <dd><strong>補完</strong> = 入力の続きを AI が予測して表示してくれること</dd>
+        <dd><strong>コンテキスト</strong> = AI が「今どのファイル・どの処理を見ているか」の範囲。大きいほど長いコードもまとめて理解してくれる</dd>
+        <dd><strong>エージェント</strong> = 指示に従って、複数の作業を自動で進めてくれる AI の動き方</dd>
+      </dl>
+      <dl class="term en-text hidden">
+        <dt>Quick glossary</dt>
+        <dd><strong>Autocomplete</strong> = AI suggests the next part of what you’re typing</dd>
+        <dd><strong>Context</strong> = How much code the AI can “see” at once; larger context = it can work with more files</dd>
+        <dd><strong>Agent</strong> = AI that can run multiple steps automatically from one instruction</dd>
+      </dl>
+    </section>
+
+    <section class="tool-section">
+      <div class="tool-name">Cursor</div>
+      <p class="tool-desc ja-text">VS Code をベースにした AI 統合型エディタ。Tab キーで補完（続きのコードを予測）、Cmd+K で「ここを直して」と頼むとその場で編集。Chat でプロジェクト全体について質問・コード生成、Agent で複数ステップを自動実行できます。</p>
+      <p class="tool-desc en-text hidden">AI editor based on VS Code. Tab for autocomplete; Cmd+K to ask for edits in place; Chat to ask about the whole project and generate code; Agent to run multi-step tasks automatically.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title ja-text">メリット</div>
+          <div class="pros-title en-text hidden">Pros</div>
+          <ul>
+            <li><span class="ja-text">VS Code の設定・拡張がほぼそのまま使える（慣れた人には安心）</span><span class="en-text hidden">VS Code settings and extensions work as-is (familiar if you already use it)</span></li>
+            <li><span class="ja-text">開発効率・デバッグ速度の向上</span><span class="en-text hidden">Faster development and debugging</span></li>
+            <li><span class="ja-text">プロジェクト全体を理解した高精度な Chat（長いコードもまとめて説明してくれる）</span><span class="en-text hidden">Context-aware Chat over full codebase</span></li>
+            <li><span class="ja-text">Claude / GPT / Gemini など複数の AI エンジンから選べる</span><span class="en-text hidden">Choice of Claude, GPT, Gemini, and more</span></li>
+            <li><span class="ja-text">セキュリティ認証・プライバシーモードで会社のコードも使いやすい</span><span class="en-text hidden">SOC 2 Type II, Privacy Mode for security</span></li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title ja-text">デメリット</div>
+          <div class="cons-title en-text hidden">Cons</div>
+          <ul>
+            <li><span class="ja-text">有料プランは月額 $20〜。Agent（自動で複数作業）を多用すると $200/月まで</span><span class="en-text hidden">Pro from $20/mo; up to $200/mo for heavy Agent use</span></li>
+            <li><span class="ja-text">Live Share（共同編集）など一部の拡張機能は使えない</span><span class="en-text hidden">Some extensions (e.g. Live Share) unsupported</span></li>
+            <li><span class="ja-text">VS Code 本体のアップデートが遅れがち</span><span class="en-text hidden">VS Code upstream updates lag by weeks/months</span></li>
+            <li><span class="ja-text">複雑なタスクでは AI の精度に限界あり</span><span class="en-text hidden">AI accuracy limits on complex tasks</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-section">
+      <div class="tool-name">Antigravity（Google）</div>
+      <p class="tool-desc ja-text">Google が作った「AI が主役」の開発環境。たくさんのコードを一度に読み込める（コンテキストが大きい）ので、大きなプロジェクトにも対応。複数の AI が同時に別の作業を進める「マルチエージェント」や、ブラウザ操作の自動化も可能。いまはプレビュー期間で無料。</p>
+      <p class="tool-desc en-text hidden">Google's AI-first IDE. Can load a lot of code at once (large context), so it suits bigger projects. Multi-agent (several AIs working in parallel) and browser automation. Free during public preview.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title ja-text">メリット</div>
+          <div class="pros-title en-text hidden">Pros</div>
+          <ul>
+            <li><span class="ja-text">プレビュー期間は無料で利用可能</span><span class="en-text hidden">Free during public preview</span></li>
+            <li><span class="ja-text">約 200 万トークンの大容量コンテキスト（たくさんのファイルをまとめて理解できる）</span><span class="en-text hidden">~2M token context (can understand many files at once)</span></li>
+            <li><span class="ja-text">マルチエージェントで、複数の作業を同時に進められる</span><span class="en-text hidden">Multi-agent: run several tasks in parallel</span></li>
+            <li><span class="ja-text">ブラウザの操作やターミナル作業を AI に任せられる</span><span class="en-text hidden">Browser control and terminal automation by AI</span></li>
+            <li><span class="ja-text">Jupyter（データ分析用ノート）を標準サポート。クラウドでどこからでも開ける</span><span class="en-text hidden">Jupyter as first-class; cloud workspaces</span></li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title ja-text">デメリット</div>
+          <div class="cons-title en-text hidden">Cons</div>
+          <ul>
+            <li><span class="ja-text">プレビュー段階のため仕様・料金が変わる可能性</span><span class="en-text hidden">Preview phase; pricing and features may change</span></li>
+            <li><span class="ja-text">Google のサービス依存</span><span class="en-text hidden">Tied to Google ecosystem</span></li>
+            <li><span class="ja-text">クラウド主体のためオフラインでは制限あり</span><span class="en-text hidden">Cloud-first; limited offline use</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-section">
+      <div class="tool-name">Windsurf（Codeium）</div>
+      <p class="tool-desc ja-text">Codeium 社の AI 付きエディタ。「Cascade」機能で、複数のファイルにまたがる変更を一度に指示できます。日本語・英語の自然な言い方で指示でき、画面もシンプルで初心者にやさしいと言われています。</p>
+      <p class="tool-desc en-text hidden">Codeium's AI IDE. “Cascade” lets you apply edits across many files at once. You can give instructions in natural Japanese or English, and the UI is simple for beginners.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title ja-text">メリット</div>
+          <div class="pros-title en-text hidden">Pros</div>
+          <ul>
+            <li><span class="ja-text">Cascade でプロジェクト全体を俯瞰しつつ一括変更</span><span class="en-text hidden">Cascade for project-wide multi-file edits</span></li>
+            <li><span class="ja-text">フォルダ・依存関係を自動認識してコンテキストに含める</span><span class="en-text hidden">Auto context from folder structure and dependencies</span></li>
+            <li><span class="ja-text">日本語・英語の自然言語指示に対応</span><span class="en-text hidden">Natural language commands in Japanese and English</span></li>
+            <li><span class="ja-text">Web 検索で API ドキュメント・GitHub を参照しながらコード生成</span><span class="en-text hidden">Web search for API docs and GitHub while coding</span></li>
+            <li><span class="ja-text">Pro は月額 $15 から、Cursor より安いプランあり</span><span class="en-text hidden">Pro from $15/mo; cheaper than Cursor</span></li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title ja-text">デメリット</div>
+          <div class="cons-title en-text hidden">Cons</div>
+          <ul>
+            <li><span class="ja-text">コード補完の速度が Cursor より遅いとの声あり</span><span class="en-text hidden">Autocomplete can feel slower than Cursor</span></li>
+            <li><span class="ja-text">自動提案が多すぎる場合がある</span><span class="en-text hidden">Suggestions can be excessive at times</span></li>
+            <li><span class="ja-text">無料プランは基本機能に限定</span><span class="en-text hidden">Free tier is limited to basic features</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-section">
+      <div class="tool-name">Codex（OpenAI）</div>
+      <p class="tool-desc ja-text">OpenAI の「コードを書く・直す」ことに特化した AI。ChatGPT に入っているので、ChatGPT の有料プランがあれば追加料金なしで使えます。ターミナル用の CLI、VS Code・Cursor・Windsurf 用の拡張、ブラウザ、macOS アプリから利用可能。話すように頼むとコードを書いたり、テストを自動で作ったりしてくれます。</p>
+      <p class="tool-desc en-text hidden">OpenAI's coding-focused AI, built into ChatGPT. If you have a paid ChatGPT plan, there's no extra fee. Use it via CLI, VS Code/Cursor/Windsurf extensions, Web, or macOS app. Ask in plain language for code or auto-generated tests.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title ja-text">メリット</div>
+          <div class="pros-title en-text hidden">Pros</div>
+          <ul>
+            <li><span class="ja-text">ChatGPT Plus/Pro/Team で追加料金なしで利用可能</span><span class="en-text hidden">Included in ChatGPT Plus/Pro/Team at no extra cost</span></li>
+            <li><span class="ja-text">ターミナル（CLI）・エディタ拡張・ブラウザ・アプリと、使い方の選択肢が多い</span><span class="en-text hidden">Multiple ways to use: CLI, IDE extensions, Web, desktop app</span></li>
+            <li><span class="ja-text">コードを書く・整理する・バグを見つける・テストを自動で作る、ができる</span><span class="en-text hidden">Code generation, refactoring, bug detection, test generation</span></li>
+            <li><span class="ja-text">多言語対応（Python, JS/TS, Java, Go, Ruby など）</span><span class="en-text hidden">Many languages: Python, JS/TS, Java, Go, Ruby, and more</span></li>
+            <li><span class="ja-text">CLI では「提案だけ」「自動で実行」など安全レベルを選べる（初心者でも安心）</span><span class="en-text hidden">CLI lets you choose safety level from suggest-only to full automation</span></li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title ja-text">デメリット</div>
+          <div class="cons-title en-text hidden">Cons</div>
+          <ul>
+            <li><span class="ja-text">ChatGPT の有料プランが必要（Plus 約 3,300 円/月〜）</span><span class="en-text hidden">Requires paid ChatGPT plan (Plus from ~$20/mo)</span></li>
+            <li><span class="ja-text">プレビュー段階で今後クレジット制など料金変更の可能性</span><span class="en-text hidden">Preview phase; may switch to credit-based pricing</span></li>
+            <li><span class="ja-text">エディタでは「拡張機能」として動くので、Cursor のような「最初から AI 入り」のツールよりは補助的な役割</span><span class="en-text hidden">Runs as an extension, so it supports rather than replaces a full AI IDE</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      <a href="index.html"><span class="ja-text">目次に戻る</span><span class="en-text hidden">Back to table of contents</span></a>
+    </p>
+  </div>
+  <script>
+    function setLang(lang) {
+      localStorage.setItem('lang', lang);
+      const jaEls = document.querySelectorAll('.ja-text');
+      const enEls = document.querySelectorAll('.en-text');
+      document.documentElement.lang = lang;
+      if (lang === 'ja') {
+        jaEls.forEach(el => el.classList.remove('hidden'));
+        enEls.forEach(el => el.classList.add('hidden'));
+        document.getElementById('btn-ja').classList.add('active');
+        document.getElementById('btn-en').classList.remove('active');
+      } else {
+        jaEls.forEach(el => el.classList.add('hidden'));
+        enEls.forEach(el => el.classList.remove('hidden'));
+        document.getElementById('btn-ja').classList.remove('active');
+        document.getElementById('btn-en').classList.add('active');
+      }
+    }
+    (function initLang() {
+      const saved = localStorage.getItem('lang');
+      if (saved === 'ja' || saved === 'en') setLang(saved);
+    })();
+  </script>
+</body>
+</html>

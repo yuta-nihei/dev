@@ -475,6 +475,16 @@
     z-index: 1;
   }
 
+  footer .footer-back a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+  footer .footer-back a:hover {
+    text-decoration: underline;
+  }
+
   /* Animations */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
@@ -1062,7 +1072,10 @@
   </section>
 
   <footer>
-    <p>PROGRAMMING LANGUAGES &amp; HOSTING GUIDE — 2025 · Claude by Anthropic</p>
+    <p class="footer-back" style="margin-bottom:16px">
+      <a href="index.html"><span class="ja-text">目次に戻る</span><span class="en-text hidden">Back to table of contents</span></a>
+    </p>
+    <p>DEVELOPER GUIDE v1.0 — 2026 by yuta-nihei <span>last updated: 2026-02-18</span></p>
   </footer>
 
 </div>
@@ -1082,6 +1095,7 @@
 <script>
   // Language toggle
   function setLang(lang) {
+    localStorage.setItem('lang', lang);
     const jaEls = document.querySelectorAll('.ja-text');
     const enEls = document.querySelectorAll('.en-text');
     document.documentElement.lang = lang;
@@ -1097,6 +1111,10 @@
       document.getElementById('btn-ja').classList.remove('active');
     }
   }
+  (function initLang() {
+    const saved = localStorage.getItem('lang');
+    if (saved === 'ja' || saved === 'en') setLang(saved);
+  })();
 
   // Filter
   function filterCards(category, btn) {

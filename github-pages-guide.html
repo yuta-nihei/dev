@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Pages 公開手順 | yuta-nihei/dev</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c28;
+      --accent: #00e5ff;
+      --accent2: #ff6b35;
+      --text: #e8e8f0;
+      --text-dim: #7878a0;
+      --border: rgba(255,255,255,0.07);
+      --glow: 0 0 30px rgba(0,229,255,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    .lang-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .hidden { display: none !important; }
+
+    .header-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 4px 12px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(24px, 4.5vw, 36px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    h1 span.accent { color: var(--accent); }
+
+    /* Step sections */
+    section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(0,229,255,0.08);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 4px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    ol {
+      margin-left: 1.25em;
+      padding-left: 0.25em;
+    }
+
+    ol li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    blockquote {
+      margin: 16px 0 0;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    .url-block {
+      margin-top: 12px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--accent);
+      overflow-x: auto;
+    }
+
+    .url-block code {
+      white-space: pre;
+    }
+
+    .footer-note {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ja')" id="btn-ja">JA</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+      <div class="header-badge">GITHUB PAGES</div>
+      <h1><span class="ja-text">GitHub Desktop で Push <span class="accent">→</span> GitHub Pages 公開手順</span><span class="en-text hidden">Push with GitHub Desktop <span class="accent">→</span> GitHub Pages Setup</span></h1>
+    </header>
+
+    <section>
+      <div class="section-header">
+        <span class="section-num">0</span>
+        <h2><span class="ja-text">Step 0 — ローカルからリポジトリを作成して Push する</span><span class="en-text hidden">Step 0 — Create a repository from local and push</span></h2>
+      </div>
+      <ol>
+        <li><span class="ja-text">プロジェクト用のローカルフォルダを用意する（既存のフォルダでよい）</span><span class="en-text hidden">Prepare a local folder for your project (or use an existing one)</span></li>
+        <li><span class="ja-text">GitHub Desktop を開く</span><span class="en-text hidden">Open GitHub Desktop</span></li>
+        <li><span class="ja-text"><strong>File → Add Local Repository</strong> でそのフォルダを選択する<br>まだ Git で管理されていないフォルダの場合は「リポジトリを作成」する旨の案内に従い、<strong>Create a repository</strong> で新規作成</span><span class="en-text hidden"><strong>File → Add Local Repository</strong> and select that folder.<br>If the folder is not yet a Git repo, follow the prompt and choose <strong>Create a repository</strong></span></li>
+        <li><span class="ja-text">リポジトリがまだ GitHub 上にない場合: 画面上の <strong>Publish repository</strong>（または <strong>Repository → Publish repository</strong>）をクリックし、リポジトリ名・説明・Public/Private を設定して <strong>Publish</strong></span><span class="en-text hidden">If the repo is not on GitHub yet: click <strong>Publish repository</strong> (or <strong>Repository → Publish repository</strong>), set name, description, and Public/Private, then <strong>Publish</strong></span></li>
+        <li><span class="ja-text"><strong>Push origin</strong> をクリックしてプッシュする</span><span class="en-text hidden">Click <strong>Push origin</strong> to push</span></li>
+      </ol>
+      <blockquote>
+        <span class="ja-text">既に GitHub にリポジトリがある場合は、下の Step 1（リポジトリをクローン）から進めてください。</span>
+        <span class="en-text hidden">If you already have a repo on GitHub, start from Step 1 (Clone repository) below.</span>
+      </blockquote>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2><span class="ja-text">Step 1 — リポジトリをクローン</span><span class="en-text hidden">Step 1 — Clone the repository</span></h2>
+      </div>
+      <ol>
+        <li><span class="ja-text">GitHub Desktop を開く</span><span class="en-text hidden">Open GitHub Desktop</span></li>
+        <li><span class="ja-text"><strong>File → Clone Repository</strong> をクリック</span><span class="en-text hidden">Click <strong>File → Clone Repository</strong></span></li>
+        <li><span class="ja-text"><code>yuta-nihei/dev</code> を選んで <strong>Clone</strong></span><span class="en-text hidden">Select <code>yuta-nihei/dev</code> and click <strong>Clone</strong></span></li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2><span class="ja-text">Step 2 — index.html を配置</span><span class="en-text hidden">Step 2 — Place index.html</span></h2>
+      </div>
+      <ol>
+        <li><span class="ja-text"><code>dev-manual.html</code> をダウンロード</span><span class="en-text hidden">Download <code>dev-manual.html</code></span></li>
+        <li><span class="ja-text">ファイル名を <strong><code>index.html</code></strong> にリネーム</span><span class="en-text hidden">Rename the file to <strong><code>index.html</code></strong></span></li>
+        <li><span class="ja-text">クローンしたフォルダ（<code>dev/</code>）の中に入れる</span><span class="en-text hidden">Put it inside the cloned folder (<code>dev/</code>)</span></li>
+      </ol>
+      <blockquote>
+        <span class="ja-text">💡 GitHub Desktop の <strong>Show in Finder</strong>（Windows は <strong>Show in Explorer</strong>）ボタンでフォルダを開くと便利です</span>
+        <span class="en-text hidden">💡 Use <strong>Show in Finder</strong> (Windows: <strong>Show in Explorer</strong>) in GitHub Desktop to open the folder easily.</span>
+      </blockquote>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2><span class="ja-text">Step 3 — Commit & Push</span><span class="en-text hidden">Step 3 — Commit & Push</span></h2>
+      </div>
+      <ol>
+        <li><span class="ja-text">GitHub Desktop に戻ると変更が自動検知される</span><span class="en-text hidden">Return to GitHub Desktop; changes are detected automatically</span></li>
+        <li><span class="ja-text">左下の Summary に <code>Add dev manual</code> と入力</span><span class="en-text hidden">Enter <code>Add dev manual</code> in the Summary field (bottom left)</span></li>
+        <li><span class="ja-text"><strong>Commit to main</strong> をクリック</span><span class="en-text hidden">Click <strong>Commit to main</strong></span></li>
+        <li><span class="ja-text">上部の <strong>Push origin</strong> をクリック</span><span class="en-text hidden">Click <strong>Push origin</strong> at the top</span></li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2><span class="ja-text">Step 4 — GitHub Pages を有効化</span><span class="en-text hidden">Step 4 — Enable GitHub Pages</span></h2>
+      </div>
+      <ol>
+        <li><span class="ja-text"><code>https://github.com/yuta-nihei/dev</code> を開く</span><span class="en-text hidden">Open <code>https://github.com/yuta-nihei/dev</code></span></li>
+        <li><span class="ja-text"><strong>Settings → Pages</strong> をクリック</span><span class="en-text hidden">Click <strong>Settings → Pages</strong></span></li>
+        <li><span class="ja-text">Source を <strong>Deploy from a branch</strong> に設定</span><span class="en-text hidden">Set Source to <strong>Deploy from a branch</strong></span></li>
+        <li><span class="ja-text">Branch を <strong>main</strong> / <strong>/ (root)</strong> に設定して <strong>Save</strong></span><span class="en-text hidden">Set Branch to <strong>main</strong> / <strong>/ (root)</strong> and click <strong>Save</strong></span></li>
+      </ol>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <span class="section-num">URL</span>
+        <h2><span class="ja-text">公開URL</span><span class="en-text hidden">Published URL</span></h2>
+      </div>
+      <p><span class="ja-text">数分後に以下のURLで公開されます：</span><span class="en-text hidden">Your site will be live at this URL after a few minutes:</span></p>
+      <div class="url-block">
+        <code>https://yuta-nihei.github.io/dev/</code>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      <a href="index.html"><span class="ja-text">目次に戻る</span><span class="en-text hidden">Back to table of contents</span></a>
+    </p>
+  </div>
+  <script>
+    function setLang(lang) {
+      localStorage.setItem('lang', lang);
+      const jaEls = document.querySelectorAll('.ja-text');
+      const enEls = document.querySelectorAll('.en-text');
+      document.documentElement.lang = lang;
+      if (lang === 'ja') {
+        jaEls.forEach(el => el.classList.remove('hidden'));
+        enEls.forEach(el => el.classList.add('hidden'));
+        document.getElementById('btn-ja').classList.add('active');
+        document.getElementById('btn-en').classList.remove('active');
+      } else {
+        jaEls.forEach(el => el.classList.add('hidden'));
+        enEls.forEach(el => el.classList.remove('hidden'));
+        document.getElementById('btn-ja').classList.remove('active');
+        document.getElementById('btn-en').classList.add('active');
+      }
+    }
+    (function initLang() {
+      const saved = localStorage.getItem('lang');
+      if (saved === 'ja' || saved === 'en') setLang(saved);
+    })();
+  </script>
+</body>
+</html>
