@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エンジニア・デザイナー・副業のスキルとポートフォリオ | Dev Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c28;
+      --accent: #00e5ff;
+      --accent2: #ff6b35;
+      --text: #e8e8f0;
+      --text-dim: #7878a0;
+      --border: rgba(255,255,255,0.07);
+      --glow: 0 0 30px rgba(0,229,255,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+      position: relative;
+    }
+
+    .lang-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .hidden { display: none !important; }
+
+    .header-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 4px 12px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(22px, 4vw, 32px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    h1 span.accent { color: var(--accent); }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(0,229,255,0.08);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 4px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .intro-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .intro-box h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    .intro-box p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .content-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-top: 8px;
+    }
+
+    .content-block p {
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .content-block ul {
+      margin: 8px 0 0 1.2em;
+      padding-left: 0;
+    }
+
+    .content-block li {
+      font-size: 14px;
+      line-height: 1.65;
+      margin-bottom: 8px;
+    }
+
+    .step-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+
+    .step-block .section-header {
+      margin-bottom: 12px;
+    }
+
+    .step-block p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-left: 0;
+    }
+
+    .footer-note {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ja')" id="btn-ja">JA</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+      <div class="header-badge">SKILLS & PORTFOLIO</div>
+      <h1><span class="ja-text">エンジニア・デザイナー・副業 <span class="accent">—</span> スキルとポートフォリオ</span><span class="en-text hidden">Skills for Engineers, Designers & Side Gigs <span class="accent">—</span> Portfolio Steps</span></h1>
+      <p class="subtitle ja-text">必要なスキルとポートフォリオ作成のステップを解説</p>
+      <p class="subtitle en-text hidden">Essential skills and step-by-step portfolio guide</p>
+    </header>
+
+    <section class="intro-box">
+      <h2><span class="ja-text">このページでわかること</span><span class="en-text hidden">What this page covers</span></h2>
+      <p class="ja-text">エンジニア・デザイナーとして働くために必要なスキル、副業で押さえておきたいポイント、そしてポートフォリオをゼロから作るまでのステップをまとめました。就職・転職・副業の準備に役立ててください。</p>
+      <p class="en-text hidden">This page summarizes the skills you need as an engineer or designer, key points for side gigs, and step-by-step how to build a portfolio from scratch. Use it to prepare for jobs, career changes, or freelancing.</p>
+    </section>
+
+    <section id="section-engineer">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2><span class="ja-text">エンジニアに必要なスキル</span><span class="en-text hidden">Skills for Engineers</span></h2>
+      </div>
+      <div class="content-block">
+        <p class="ja-text">技術力に加え、設計・ドキュメント・コミュニケーションと、学び続ける姿勢が重要です。</p>
+        <p class="en-text hidden">Beyond technical ability, you need design thinking, documentation, communication, and a mindset of continuous learning.</p>
+        <ul>
+          <li><span class="ja-text"><strong>プログラミングの基礎</strong> — 1言語以上を「読める・書ける・デバッグできる」レベルで習得する</span><span class="en-text hidden"><strong>Programming fundamentals</strong> — Be able to read, write, and debug in at least one language</span></li>
+          <li><span class="ja-text"><strong>Git・CLI</strong> — バージョン管理とターミナル操作はほぼ必須。ブランチ・マージ・プルリクの流れを理解する</span><span class="en-text hidden"><strong>Git & CLI</strong> — Version control and terminal usage are essential; understand branches, merge, and pull requests</span></li>
+          <li><span class="ja-text"><strong>設計・アーキテクチャ</strong> — 要件を整理し、保守しやすい構成を考える力。API設計・DB設計の基礎も役立つ</span><span class="en-text hidden"><strong>Design & architecture</strong> — Organize requirements and design maintainable systems; basics of API and DB design help</span></li>
+          <li><span class="ja-text"><strong>ドキュメント・コメント</strong> — 読む人を意識したREADME・設計書・コードコメントを書く習慣</span><span class="en-text hidden"><strong>Documentation & comments</strong> — Write READMEs, design docs, and code comments with the reader in mind</span></li>
+          <li><span class="ja-text"><strong>コミュニケーション</strong> — 進捗報告・相談・レビューでの質問・説明を明確に行う</span><span class="en-text hidden"><strong>Communication</strong> — Report progress, ask questions, and explain clearly in reviews and meetings</span></li>
+          <li><span class="ja-text"><strong>学習し続ける姿勢</strong> — 新しい技術・ツールに触れ、公式ドキュメントやコミュニティから情報を得る</span><span class="en-text hidden"><strong>Continuous learning</strong> — Stay curious; use official docs and communities to keep up with new tools and practices</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="section-designer">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2><span class="ja-text">デザイナーに必要なスキル</span><span class="en-text hidden">Skills for Designers</span></h2>
+      </div>
+      <div class="content-block">
+        <p class="ja-text">見た目だけでなく、使いやすさ（UX）とクライアントとの対話が成果につながります。</p>
+        <p class="en-text hidden">Visual craft matters, but usability (UX) and clear communication with clients drive real impact.</p>
+        <ul>
+          <li><span class="ja-text"><strong>レイアウト・構成</strong> — グリッド・余白・視線の流れを意識した配置。情報の優先度をはっきりさせる</span><span class="en-text hidden"><strong>Layout & composition</strong> — Use grid, spacing, and visual flow; make information hierarchy clear</span></li>
+          <li><span class="ja-text"><strong>タイポグラフィ・カラー</strong> — フォント選定・サイズ・行間・色の役割（アクセント・背景・テキスト）を理解する</span><span class="en-text hidden"><strong>Typography & color</strong> — Choose type and color with purpose: hierarchy, readability, and accessibility</span></li>
+          <li><span class="ja-text"><strong>UI/UX の基礎</strong> — ユーザーが何をしたいか考え、導線・フィードバック・一貫性を設計する</span><span class="en-text hidden"><strong>UI/UX basics</strong> — Think from the user’s goals; design flows, feedback, and consistency</span></li>
+          <li><span class="ja-text"><strong>ツール</strong> — Figma・Sketch・Adobe XD など、チームで使うツールを1つは使いこなせるようにする</span><span class="en-text hidden"><strong>Tools</strong> — Master at least one tool (Figma, Sketch, Adobe XD) that your team uses</span></li>
+          <li><span class="ja-text"><strong>ヒアリング・フィードバック対応</strong> — 要件を聞き出し、修正依頼を整理して反映する。理由を説明できると信頼が増す</span><span class="en-text hidden"><strong>Listening & feedback</strong> — Uncover requirements and incorporate feedback; explaining your choices builds trust</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="section-sidejob">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2><span class="ja-text">副業で必要なスキル・心がけ</span><span class="en-text hidden">Skills & Mindset for Side Gigs</span></h2>
+      </div>
+      <div class="content-block">
+        <p class="ja-text">本業を崩さず、契約と報酬を明確にすることが副業を続けるコツです。</p>
+        <p class="en-text hidden">Keeping your main job stable and clarifying scope and payment are key to sustaining side work.</p>
+        <ul>
+          <li><span class="ja-text"><strong>時間管理</strong> — 本業・副業・休息のバランスを決め、無理のない稼働時間に抑える</span><span class="en-text hidden"><strong>Time management</strong> — Set clear boundaries between main job, side work, and rest; avoid overcommitment</span></li>
+          <li><span class="ja-text"><strong>契約・スコープ</strong> — 何をどこまでやるか（範囲・成果物・回数）を文書で残し、後から「言った・言わない」を防ぐ</span><span class="en-text hidden"><strong>Contracts & scope</strong> — Put deliverables, scope, and revisions in writing to avoid misunderstandings</span></li>
+          <li><span class="ja-text"><strong>単価・見積もり</strong> — 相場を調べ、自分の時間単価を意識して見積もる。安すぎる受注は負担になりやすい</span><span class="en-text hidden"><strong>Rates & estimates</strong> — Research market rates and estimate based on your time; undercharging leads to burnout</span></li>
+          <li><span class="ja-text"><strong>納期・中間報告</strong> — 締め切りを守り、進捗を定期的に伝えると信頼が積み上がる</span><span class="en-text hidden"><strong>Deadlines & updates</strong> — Meet deadlines and send regular progress updates to build trust</span></li>
+          <li><span class="ja-text"><strong>報酬請求・支払い条件</strong> — 請求のタイミング・振込先・支払いサイトを最初に決めておく</span><span class="en-text hidden"><strong>Invoicing & payment terms</strong> — Agree on when to invoice, bank details, and payment due dates upfront</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="section-portfolio">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2><span class="ja-text">ポートフォリオのステップ</span><span class="en-text hidden">Portfolio — Step by Step</span></h2>
+      </div>
+      <p class="ja-text" style="margin-bottom:16px">ポートフォリオは「自分が何ができるか」を伝えるための作品集です。以下の順で進めると作りやすいです。</p>
+      <p class="en-text hidden" style="margin-bottom:16px">A portfolio shows what you can do. Following these steps makes it easier to build one.</p>
+
+      <div class="step-block">
+        <div class="section-header">
+          <span class="section-num">Step 1</span>
+          <h2><span class="ja-text">目的・ターゲットを決める</span><span class="en-text hidden">Set your purpose and audience</span></h2>
+        </div>
+        <p class="ja-text">「転職で見せる」「副業の依頼を増やしたい」「デザイン勉強の記録」など、誰に何を伝えたいかをはっきりさせます。ターゲットが決まると、入れる作品・トーン・量が決まりやすくなります。</p>
+        <p class="en-text hidden">Decide who you’re speaking to and why: job hunting, attracting clients, or documenting your learning. A clear goal helps you choose which work to include and how to present it.</p>
+      </div>
+
+      <div class="step-block">
+        <div class="section-header">
+          <span class="section-num">Step 2</span>
+          <h2><span class="ja-text">作品を選ぶ・整理する</span><span class="en-text hidden">Select and organize your work</span></h2>
+        </div>
+        <p class="ja-text">実務・個人制作・勉強用の課題のうち、強みや志向が伝わるものを3〜5点程度選びます。それぞれ「課題・やったこと・結果」が一言で言えるように整理しておくと、後で説明しやすくなります。</p>
+        <p class="en-text hidden">Pick 3–5 pieces (from work, personal projects, or study) that show your strengths. For each, note the brief, what you did, and the outcome so you can explain them easily later.</p>
+      </div>
+
+      <div class="step-block">
+        <div class="section-header">
+          <span class="section-num">Step 3</span>
+          <h2><span class="ja-text">構成・ストーリーを考える</span><span class="en-text hidden">Define structure and story</span></h2>
+        </div>
+        <p class="ja-text">トップ → 自己紹介・スキル → 作品一覧 → 各作品詳細、のように見る順番を決めます。紙やワイヤーでラフを描いてから作ると、迷いが減ります。</p>
+        <p class="en-text hidden">Decide the flow: e.g. top → about/skills → work list → case studies. Sketch a quick wireframe on paper or in a tool before building to avoid getting lost.</p>
+      </div>
+
+      <div class="step-block">
+        <div class="section-header">
+          <span class="section-num">Step 4</span>
+          <h2><span class="ja-text">制作・公開する</span><span class="en-text hidden">Build and publish</span></h2>
+        </div>
+        <p class="ja-text">HTML/CSS で自作、Notion・Canva・Figma の公開リンク、GitHub Pages や Netlify でデプロイなど、自分に合った方法で形にします。まずは「1ページで自己紹介＋作品リンク」から始めても十分です。</p>
+        <p class="en-text hidden">Build with whatever fits you: custom HTML/CSS, Notion/Canva/Figma share links, or GitHub Pages/Netlify. Starting with a single page (intro + links to work) is enough.</p>
+      </div>
+
+      <div class="step-block">
+        <div class="section-header">
+          <span class="section-num">Step 5</span>
+          <h2><span class="ja-text">更新・フィードバックを続ける</span><span class="en-text hidden">Keep updating and gathering feedback</span></h2>
+        </div>
+        <p class="ja-text">新しい作品ができたら追加し、古いものは整理します。可能なら知人やメンターに一度見てもらい、分かりにくいところを直していくと、説得力が増します。</p>
+        <p class="en-text hidden">Add new work and prune old entries over time. If you can, get feedback from peers or mentors and refine anything that’s unclear—your portfolio will become more convincing.</p>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      <a href="index.html"><span class="ja-text">目次に戻る</span><span class="en-text hidden">Back to table of contents</span></a>
+    </p>
+  </div>
+  <script>
+    function setLang(lang) {
+      localStorage.setItem('lang', lang);
+      const jaEls = document.querySelectorAll('.ja-text');
+      const enEls = document.querySelectorAll('.en-text');
+      document.documentElement.lang = lang;
+      if (lang === 'ja') {
+        jaEls.forEach(el => el.classList.remove('hidden'));
+        enEls.forEach(el => el.classList.add('hidden'));
+        document.getElementById('btn-ja').classList.add('active');
+        document.getElementById('btn-en').classList.remove('active');
+      } else {
+        jaEls.forEach(el => el.classList.add('hidden'));
+        enEls.forEach(el => el.classList.remove('hidden'));
+        document.getElementById('btn-ja').classList.remove('active');
+        document.getElementById('btn-en').classList.add('active');
+      }
+    }
+    (function initLang() {
+      const saved = localStorage.getItem('lang');
+      if (saved === 'ja' || saved === 'en') setLang(saved);
+    })();
+  </script>
+</body>
+</html>
