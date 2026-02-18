@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Languages & Hosting Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface2: #1c1c28;
+      --accent: #00e5ff;
+      --accent2: #ff6b35;
+      --text: #e8e8f0;
+      --text-dim: #7878a0;
+      --border: rgba(255,255,255,0.07);
+      --glow: 0 0 30px rgba(0,229,255,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .header-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 4px 12px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    h1 span.accent { color: var(--accent); }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    nav {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px;
+      box-shadow: var(--glow);
+    }
+
+    .toc-list {
+      list-style: none;
+    }
+
+    .toc-item {
+      border-radius: 12px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .toc-item:hover {
+      background: var(--surface2);
+    }
+
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 15px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+    }
+
+    .toc-link:hover {
+      color: var(--accent);
+    }
+
+    .toc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(0,229,255,0.08);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 4px;
+      padding: 4px 10px;
+      flex-shrink: 0;
+    }
+
+    .toc-title-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toc-title-ja {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .toc-title-en {
+      font-size: 12px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.3px;
+    }
+
+    .toc-arrow {
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    .toc-link:hover .toc-arrow {
+      color: var(--accent);
+    }
+
+    .footer-note {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .footer-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-badge">TABLE OF CONTENTS</div>
+      <h1>Programming Languages <span class="accent">&</span> Hosting Guide</h1>
+      <p class="subtitle">プログラミング言語・ホスティングガイド — 目次 / Table of Contents</p>
+    </header>
+
+    <nav aria-label="目次 Table of Contents">
+      <ol class="toc-list">
+        <li class="toc-item">
+          <a class="toc-link" href="dev-manual.html#section-languages">
+            <span class="toc-num">01</span>
+            <span class="toc-title-wrap">
+              <span class="toc-title-ja">プログラミング言語</span>
+              <span class="toc-title-en">Programming Languages</span>
+            </span>
+            <span class="toc-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link" href="dev-manual.html#section-hosting">
+            <span class="toc-num">02</span>
+            <span class="toc-title-wrap">
+              <span class="toc-title-ja">無料ホスティングサービス</span>
+              <span class="toc-title-en">Free Hosting Services</span>
+            </span>
+            <span class="toc-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link" href="dev-manual.html#section-comparison">
+            <span class="toc-num">03</span>
+            <span class="toc-title-wrap">
+              <span class="toc-title-ja">ホスティング比較表</span>
+              <span class="toc-title-en">Hosting Comparison</span>
+            </span>
+            <span class="toc-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li class="toc-item">
+          <a class="toc-link" href="dev-manual.html#section-checklist">
+            <span class="toc-num">04</span>
+            <span class="toc-title-wrap">
+              <span class="toc-title-ja">プロジェクト開始チェックリスト</span>
+              <span class="toc-title-en">Project Kickoff Checklist</span>
+            </span>
+            <span class="toc-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ol>
+    </nav>
+
+    <p class="footer-note">
+      <a href="dev-manual.html">開発者ガイド全文を開く / Open full guide</a>
+    </p>
+  </div>
+</body>
+</html>
