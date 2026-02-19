@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGENTS.md / agent.md 作成手順 | Webサービス開発</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page--manual">
+  <div class="container">
+
+    <header>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('ja')" id="btn-ja">JA</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+      </div>
+      <div class="header-badge">AGENTS.md</div>
+      <h1>
+        <span class="ja-text">Webサービス開発時の<br><span class="accent">agent.md</span> / <span class="accent2">AGENTS.md</span> 作成手順</span>
+        <span class="en-text hidden">How to Create <span class="accent">agent.md</span> / <span class="accent2">AGENTS.md</span> for Web Projects</span>
+      </h1>
+      <p class="subtitle ja-text">AIエージェント向けのプロジェクト指示書を、アプリの定義・コンセプト・技術要件から書く手順です。</p>
+      <p class="subtitle en-text hidden">A step-by-step guide to writing project instructions for AI agents, starting with app definition, concept, and technical requirements.</p>
+      <a href="index.html" class="back-link"><span class="ja-text">← 戻る</span><span class="en-text hidden">← Back</span></a>
+    </header>
+
+    <!-- Section 1: 概要・目的 -->
+    <section id="section-overview">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2><span class="ja-text">概要・目的</span><span class="en-text hidden">Overview & Purpose</span></h2>
+      </div>
+      <p class="ja-text">AGENTS.md（または agent.md）は、Cursor・Codex などの AI がリポジトリを扱うときに読む「指示書」です。プロジェクトの前提を書いておくことで、AI が誤った技術選定（例: Express を使うプロジェクトで Fastify を提案する）を防ぎ、初回から規約に沿った提案をしやすくします。</p>
+      <p class="en-text hidden">AGENTS.md (or agent.md) is an instruction file that AI tools like Cursor and Codex read when working on your repo. By documenting your project’s context, you avoid wrong assumptions (e.g. suggesting Fastify in an Express project) and get convention-aware suggestions from the start.</p>
+      <p class="ja-text">手順では、<strong>なんのアプリケーションか・コンセプト・技術要件</strong>を冒頭に書くことを心がけ、そのうえでアーキテクチャ・コマンド・コード規約・レビュー指針をまとめます。</p>
+      <p class="en-text hidden">This guide emphasizes writing <strong>what the app is, its concept, and technical requirements</strong> first, then architecture, commands, code conventions, and review guidelines.</p>
+    </section>
+
+    <!-- Section 2: プロジェクト用 AGENTS.md の作成手順 -->
+    <section id="section-project-agents">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2><span class="ja-text">プロジェクト用 AGENTS.md の作成手順</span><span class="en-text hidden">Creating Project-Level AGENTS.md</span></h2>
+      </div>
+
+      <h3 class="ja-text">どこに置くか</h3>
+      <h3 class="en-text hidden">Where to put it</h3>
+      <p class="ja-text">リポジトリのルート（Git のルート）に <code>AGENTS.md</code> を1つ置きます。ファイル名は <code>AGENTS.md</code> が一般的です。<code>agent.md</code> は同じ役割の別名として使えます。</p>
+      <p class="en-text hidden">Place a single <code>AGENTS.md</code> at the repository root (Git root). <code>agent.md</code> is an alternative name for the same role.</p>
+
+      <h3 class="ja-text">何を書くか（心がけること）</h3>
+      <h3 class="en-text hidden">What to write (guidelines)</h3>
+      <ul>
+        <li class="ja-text"><strong>アプリの定義</strong> — なんのアプリケーションか（例: 会員制SaaS、社内ツール、マーケ用LP、API サービス）を一言で書く。</li>
+        <li class="en-text hidden"><strong>App definition</strong> — In one line, state what the application is (e.g. member-only SaaS, internal tool, marketing LP, API service).</li>
+        <li class="ja-text"><strong>コンセプト</strong> — 誰向けか・何を解決するか・方針（シンプル優先 / 拡張性重視 など）を短く書く。</li>
+        <li class="en-text hidden"><strong>Concept</strong> — Briefly describe target users, what problem it solves, and principles (e.g. simplicity first, scalability first).</li>
+        <li class="ja-text"><strong>技術要件</strong> — 使用言語・フレームワーク・DB・認証・ホスティングなど。選定理由が分かると AI の提案がぶれにくい。</li>
+        <li class="en-text hidden"><strong>Technical requirements</strong> — Languages, frameworks, DB, auth, hosting. Stating why they were chosen helps keep AI suggestions consistent.</li>
+        <li class="ja-text">そのうえで: <strong>アーキテクチャ</strong>（ディレクトリ構成・役割）、<strong>コマンド</strong>（<code>npm run dev</code> など）、<strong>コード規約</strong>、<strong>レビュー指針</strong>（PR 時に AI が参照する想定）を書く。</li>
+        <li class="en-text hidden">Then add: <strong>Architecture</strong> (directory layout, roles), <strong>Commands</strong> (e.g. <code>npm run dev</code>), <strong>Code conventions</strong>, and <strong>Review guidelines</strong> for AI when reviewing PRs.</li>
+      </ul>
+
+      <h3 class="ja-text">AGENTS.md のサンプル（抜粋）</h3>
+      <h3 class="en-text hidden">AGENTS.md sample (excerpt)</h3>
+      <p class="ja-text">以下は Next.js の Web アプリを想定した例です。プロジェクト名・コンセプト・技術要件を冒頭に置いています。</p>
+      <p class="en-text hidden">Below is an example for a Next.js web app, with project name, concept, and technical requirements at the top.</p>
+      <div class="content-block">
+        <pre><code># プロジェクト名: 会員制ダッシュボード
+
+## アプリの定義
+- 会員（ログイン済みユーザー）向けの管理ダッシュボード。登録・設定・分析画面を提供する。
+
+## コンセプト
+- 対象: 運用担当者。作業時間の削減とミス防止が目的。
+- 方針: シンプルな UI 優先。将来の多言語対応を見据え i18n を最初から入れる。
+
+## 技術要件
+- Next.js 14 (App Router)。React Server Components を基本とし、&quot;use client&quot; は必要最小限。
+- DB: PostgreSQL (Supabase)。認証は Supabase Auth。
+- ホスティング: Vercel。pnpm 使用。
+
+## アーキテクチャ
+- ページは app/(routes)/ に配置。共通レイアウトは app/layout.tsx。
+- API ルートは app/api/ に 1 リソース 1 ディレクトリで route.ts を置く。
+
+## コマンド
+- `pnpm dev` — 開発サーバー起動
+- `pnpm build` / `pnpm start` — ビルド・本番起動
+- `pnpm lint` — ESLint
+- `pnpm test` — Vitest
+
+## コード規約
+- 新規ページには対応するテストを追加する。
+- 環境変数は .env.local にのみ記載し、リポジトリにコミットしない。
+
+## レビュー指針
+- 認証なしでアクセスできる API がないか確認する。
+- 未使用の依存関係を追加していないか確認する。</code></pre>
+      </div>
+
+      <h3 class="ja-text">モノレポの場合</h3>
+      <h3 class="en-text hidden">Monorepo</h3>
+      <p class="ja-text">パッケージごとにルールを変えたい場合は、そのディレクトリに <code>AGENTS.override.md</code> を置くと、その配下ではそちらの内容が優先されます（ツールによっては「上書き」ではなく「追記」として結合される場合もあります）。</p>
+      <p class="en-text hidden">To override rules per package, add <code>AGENTS.override.md</code> in that directory; it takes precedence for that subtree (some tools merge it instead of full override).</p>
+    </section>
+
+    <!-- Section 3: グローバル AGENTS.md（任意） -->
+    <section id="section-global">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2><span class="ja-text">グローバル AGENTS.md（任意）</span><span class="en-text hidden">Global AGENTS.md (Optional)</span></h2>
+      </div>
+      <p class="ja-text">自分が使う全リポジトリに共通で効かせたいルールは、ユーザーホームに置きます。例: <code>~/.codex/AGENTS.md</code>（Codex の場合）。パッケージマネージャー（pnpm 優先など）・Git のコミット規約・コードスタイル（シングルクォート、async/await 優先など）を書いておくと便利です。</p>
+      <p class="en-text hidden">For rules that apply to all your repos, use a file in your home directory, e.g. <code>~/.codex/AGENTS.md</code> (for Codex). Document package manager preference (e.g. pnpm), Git commit conventions, and code style (single quotes, prefer async/await) there.</p>
+    </section>
+
+    <!-- Section 4: Cursor 向け -->
+    <section id="section-cursor">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2><span class="ja-text">Cursor 向けの補足</span><span class="en-text hidden">Cursor-Specific Notes</span></h2>
+      </div>
+      <p class="ja-text">Cursor では、次の2つも使えます。AGENTS.md はツール非依存なので、まずはリポジトリルートの AGENTS.md を用意することをおすすめします。</p>
+      <p class="en-text hidden">Cursor also supports the following. AGENTS.md is tool-agnostic, so start with one at the repo root.</p>
+      <ul>
+        <li class="ja-text"><strong>.cursor/rules/*.mdc</strong> — ファイルパターン（例: <code>**/*.ts</code>）で「いつでも適用」か「特定ファイルを開いているときだけ」を指定できるルール。YAML フロントマターで <code>description</code>・<code>globs</code>・<code>alwaysApply</code> を設定。</li>
+        <li class="en-text hidden"><strong>.cursor/rules/*.mdc</strong> — Rules with file patterns (e.g. <code>**/*.ts</code>) to apply always or only when matching files are open. Use YAML frontmatter: <code>description</code>, <code>globs</code>, <code>alwaysApply</code>.</li>
+        <li class="ja-text"><strong>.cursor/agents/*.md</strong> — サブエージェント用のプロンプト（コードレビュー専門など）。name と description を frontmatter で指定。</li>
+        <li class="en-text hidden"><strong>.cursor/agents/*.md</strong> — Prompts for subagents (e.g. code reviewer). Set <code>name</code> and <code>description</code> in frontmatter.</li>
+      </ul>
+    </section>
+
+    <!-- Section 5: チェックリスト・参考 -->
+    <section id="section-checklist">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2><span class="ja-text">チェックリスト・参考</span><span class="en-text hidden">Checklist & References</span></h2>
+      </div>
+      <p class="ja-text">AGENTS.md を作成・更新するときのチェックリストです。</p>
+      <p class="en-text hidden">Checklist when creating or updating AGENTS.md.</p>
+      <ul>
+        <li class="ja-text">アプリの定義・コンセプト・技術要件が冒頭に書かれているか</li>
+        <li class="en-text hidden">App definition, concept, and technical requirements are at the top</li>
+        <li class="ja-text">主要なコマンド（dev / build / test / lint）が書かれているか</li>
+        <li class="en-text hidden">Main commands (dev, build, test, lint) are documented</li>
+        <li class="ja-text">ディレクトリ構成やアーキテクチャの方針が分かるか</li>
+        <li class="en-text hidden">Directory structure and architecture are clear</li>
+        <li class="ja-text">PR レビュー時に AI に確認してほしい点（レビュー指針）があるとよい</li>
+        <li class="en-text hidden">Review guidelines for AI when reviewing PRs are helpful</li>
+      </ul>
+      <p class="ja-text">参考: Cursor のルールは <code>.cursor/rules/</code> のドキュメント、AGENTS.md の一般的な使い方は Codex / Cursor の「AGENTS.md」や「project instructions」の説明を参照してください。</p>
+      <p class="en-text hidden">Reference: See Cursor docs for <code>.cursor/rules/</code>, and your tool’s docs for “AGENTS.md” or “project instructions” for general usage.</p>
+    </section>
+
+    <p class="footer-note">
+      <a href="index.html"><span class="ja-text">目次に戻る</span><span class="en-text hidden">Back to table of contents</span></a>
+    </p>
+  </div>
+  <script>
+    function setLang(lang) {
+      localStorage.setItem('lang', lang);
+      const jaEls = document.querySelectorAll('.ja-text');
+      const enEls = document.querySelectorAll('.en-text');
+      document.documentElement.lang = lang;
+      if (lang === 'ja') {
+        jaEls.forEach(el => el.classList.remove('hidden'));
+        enEls.forEach(el => el.classList.add('hidden'));
+        document.getElementById('btn-ja').classList.add('active');
+        document.getElementById('btn-en').classList.remove('active');
+      } else {
+        jaEls.forEach(el => el.classList.add('hidden'));
+        enEls.forEach(el => el.classList.remove('hidden'));
+        document.getElementById('btn-ja').classList.remove('active');
+        document.getElementById('btn-en').classList.add('active');
+      }
+    }
+    (function initLang() {
+      const saved = localStorage.getItem('lang');
+      if (saved === 'ja' || saved === 'en') setLang(saved);
+    })();
+  </script>
+</body>
+</html>
